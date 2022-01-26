@@ -15,6 +15,7 @@ from user.talon_hud.widgets.walkthroughpanel import HeadUpWalkThroughPanel
 from user.talon_hud.widgets.contextmenu import HeadUpContextMenu
 from user.talon_hud.widgets.cursortracker import HeadUpCursorTracker
 from user.talon_hud.widgets.screenoverlay import HeadUpScreenOverlay
+from user.talon_hud.widgets.menupanel import HeadUpMenuPanel
 from user.talon_hud.theme import HeadUpDisplayTheme
 from user.talon_hud.event_dispatch import HeadUpEventDispatch
 
@@ -119,11 +120,14 @@ class HeadUpWidgetManager:
 
         # Reload the main preferences in case the Talon HUD mode changed
         new_theme = self.preferences.prefs['theme_name']
-        if current_hud_environment != None and current_hud_environment != self.previous_talon_hud_environment:
+        environment_changed = current_hud_environment != self.previous_talon_hud_environment
+        if environment_changed:
             self.preferences.set_hud_environment(current_hud_environment)
-            self.preferences.load_preferences(self.preferences.get_main_preferences_filename())
+            
+            # Prevent two reloads after another if the monitor has also changed
+            if not dimensions_changed:
+                self.preferences.load_preferences(self.preferences.get_main_preferences_filename())
             self.previous_talon_hud_environment = current_hud_environment
-            new_theme = self.preferences.prefs['theme_name']
         
         if dimensions_changed:
             screen_preferences_file = self.preferences.get_screen_preferences_filepath(current_screen_rects)
@@ -146,6 +150,8 @@ class HeadUpWidgetManager:
             else:
                 self.preferences.load_preferences( screen_preferences_file )
                 
+        if environment_changed:
+            new_theme = self.preferences.prefs['theme_name']            
         
         # Apply the new preferences to the widgets directly
         for widget in self.widgets:
@@ -153,7 +159,8 @@ class HeadUpWidgetManager:
             if widget.setup_type != "":
                 widget.start_setup("cancel")
             widget.load(self.preferences.prefs, False, True)
-            widget.start_setup("reload")
+            if widget.enabled:
+                widget.start_setup("reload")
             
         # Set the screen info to be used for comparison in case the screen changes later
         self.previous_screen_rects = current_screen_rects
@@ -295,7 +302,9 @@ class HeadUpWidgetManager:
             # Special widgets that have varying positions            
             self.load_widget("context_menu", "context_menu"),
             self.load_widget("cursor_tracker", "cursor_tracker"),
-            self.load_widget("screen_overlay", "screen_overlay"),            
+            self.load_widget("screen_overlay", "screen_overlay"),
+            
+            self.load_widget("menu_panel", "menu_panel"),
         ]
         
     def load_widget(self, id: str, type: str, subscriptions = None) -> BaseWidget:
@@ -312,6 +321,8 @@ class HeadUpWidgetManager:
             return self.load_cursor_tracker(id, self.preferences.prefs)
         elif type == "screen_overlay":
             return self.load_screen_overlay(id, self.preferences.prefs)
+        elif type == "menu_panel":
+            return self.load_menu_panel(id, self.preferences.prefs)
         
         # All widgets with specific subscriptions tied to them        
         elif type == "text_panel":
@@ -362,4 +373,8 @@ class HeadUpWidgetManager:
     def load_walk_through_panel(self, id, preferences=None, subscriptions=None):
         """Load a choice panel widget with the given preferences"""
         return HeadUpWalkThroughPanel(id, preferences, self.theme, self.event_dispatch, subscriptions)
+    
+    def load_menu_panel(self, id, preferences=None):
+        """Load a menu panel widget with the given preferences"""
+        return HeadUpMenuPanel(id, preferences, self.theme, self.event_dispatch)
     
