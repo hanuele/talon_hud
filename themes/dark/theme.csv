@@ -3,12 +3,14 @@ sleep_blink_colour,AAAAAA
 command_blink_colour,DDDDDD
 parrot_blink_colour,FFE500
 dictation_blink_colour,ADADAD
+mixed_blink_colour,ADADAD
 top_stroke_colour,444444
 down_stroke_colour,222222
 sleep_mode_colour,212121
 parrot_switch_mode_colour,FFE500
 command_mode_colour,555555
 dictation_mode_colour,4cc2ff
+mixed_mode_colour,4cc2ff
 button_colour,777777
 button_hover_colour,999999
 close_icon_accent_colour,AA0000

@@ -52,6 +52,8 @@ class HeadUpStatusBar(BaseWidget):
         if (self.animation_tick == 0 and "mode" in new_content and new_content["mode"] != self.content['mode']):            
             if (new_content["mode"] == 'command'):
                 self.blink_colour = self.command_blink_colour
+            elif (new_content["mode"] == 'mixed'):
+                self.blink_colour = self.dictation_blink_colour
             elif (new_content["mode"] == 'dictation'):
                 self.blink_colour = self.dictation_blink_colour
             elif (new_content["mode"] == 'sleep'):
