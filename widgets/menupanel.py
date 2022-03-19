@@ -314,7 +314,7 @@ class HeadUpMenuPanel(LayoutWidget):
         #canvas.draw_rect( placed_menu_item['rect'] ) 
         y = placed_menu_item['rect'].y
         image_radius = 40
-        if (placed_menu_item['item'].image is not '' and self.theme.get_image(placed_menu_item['item'].image) is not None ):
+        if (placed_menu_item['item'].image != '' and self.theme.get_image(placed_menu_item['item'].image) is not None ):
             image = self.theme.get_image(placed_menu_item['item'].image, image_radius, image_radius)
             canvas.draw_image(image, placed_menu_item['rect'].x + image_radius - image.width / 2, placed_menu_item['rect'].y + 10 )
             y += self.font_size
