@@ -5,9 +5,9 @@ dictation_blink_colour,#F49609
 top_stroke_colour,#DDDDDD
 down_stroke_colour,#999999
 parrot_switch_mode_colour,#FFE500
-sleep_mode_colour,#777777
-command_mode_colour,#FFFFFF
-dictation_mode_colour,#FFFFFF
+sleep_mode_colour,#3b3c58
+command_mode_colour,#252526
+dictation_mode_colour,#7579eb
 button_colour,#FFFFFF
 button_hover_colour,#CCCCCC
 close_icon_accent_colour,#FF0000
